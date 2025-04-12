@@ -54,8 +54,8 @@ if (isset($_POST['courseID']) && isset($_POST['unitID']) && isset($_POST['roomID
             echo "<td>" . htmlspecialchars($courseID) . "</td>";
             echo "<td>" . htmlspecialchars($unitID) . "</td>";
             echo "<td>" . htmlspecialchars($roomID) . "</td>";
-            echo "<td>" . htmlspecialchars($timeIn ?? 'No Time In') . "</td>";
-            echo "<td>" . htmlspecialchars($timeOut ?? 'No Time Out') . "</td>";
+            echo "<td data-timein='$timeIn'>" . htmlspecialchars($timeIn ?? 'No Time In') . "</td>";
+            echo "<td data-timeOut='$timeOut'>" . htmlspecialchars($timeOut ?? 'No Time Out') . "</td>";
             echo "<td>" . $status . "</td>";
             echo "</tr>";
         }

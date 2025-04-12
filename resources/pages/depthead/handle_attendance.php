@@ -7,6 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($attendanceData) {
         try {
             foreach ($attendanceData as $data) {
+
+               if($data['attendance_time']!="No Time In"){
                 $professorID = $data['professorID'];
                 $attendance_time = $data['attendance_time'] ?? null;
                 $course = $data['course'];
@@ -52,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':date' => $date
                     ]);
                 }
+
+               }
+
+               
             }
 
             $response['status'] = 'success';

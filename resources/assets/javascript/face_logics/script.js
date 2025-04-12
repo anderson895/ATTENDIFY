@@ -52,7 +52,7 @@ function updateTable() {
 function markAttendance(detectedFaces) {
   document.querySelectorAll("#professorTableContainer tr").forEach((row) => {
     const registrationNumber = row.cells[0].innerText.trim();
-    
+
     if (detectedFaces.includes(registrationNumber)) {
       const now = new Date();
       const timestamp = now.toLocaleString('en-US', {
@@ -61,31 +61,35 @@ function markAttendance(detectedFaces) {
         second: '2-digit',
         hour12: true
       });
-  
-      // Corrected cell indices
-      const timeInCell = row.cells[5];   // "Time In" is the 6th column
-      const timeOutCell = row.cells[6];  // "Time Out" is the 7th column
-      const statusCell = row.cells[7];   // "Status" is the 8th column
-  
-      if (!timeInCell.textContent.trim() || timeInCell.textContent.includes("No Time In")) {
-        // Mark Time In
+
+      const timeInCell = row.cells[5];    // 6th column
+      const timeOutCell = row.cells[6];   // 7th column
+      const statusCell = row.cells[7];    // 8th column
+
+      const timeInAttr = timeInCell.getAttribute('data-timein');
+      console.log(timeInAttr);
+
+      if (!timeInAttr || timeInAttr === "") {
+        console.log(timeInCell.textContent.trim());
+        console.log('For timeIn');
         timeInCell.innerHTML = createAttendanceMarkup(timestamp, true);
-        statusCell.innerHTML = '<span class="badge bg-success">Present</span>';
-        // saveAttendanceRecord(registrationNumber, timestamp, 'time_in');
-      } else if (!timeOutCell.textContent.trim() || timeOutCell.textContent.includes("No Time Out")) {
-        // Mark Time Out
-        timeOutCell.innerHTML = createAttendanceMarkup(timestamp, false);
-        statusCell.innerHTML = '<span class="badge bg-info">Completed</span>';
-        // saveAttendanceRecord(registrationNumber, timestamp, 'time_out');
+     
+        statusCell.textContent = "";
+      } else {
+        console.log('For timeOut');
+        timeOutCell.innerHTML = createAttendanceMarkup(timestamp, true);
+        statusCell.textContent = "";
       }
     }
   });
-  
 }
+
 
 function createAttendanceMarkup(timestamp, isTimeIn) {
   const formattedTimestamp = timestamp.replace(/([AP]M)/, '<strong>$1</strong>');
   
+  console.log(isTimeIn);
+
   return `
     <div class="attendance-mark ${isTimeIn ? 'time-in' : 'time-out'}">
       <span class="time">${formattedTimestamp}</span>
@@ -278,6 +282,11 @@ function sendAttendanceDataToServer() {
             showMessage(
               response.message || "Attendance recorded successfully."
             );
+            
+            setTimeout(function () {
+              location.reload();
+            }, 2000); // 2000 milliseconds = 2 seconds
+            
           } else {
             showMessage(
               response.message ||
