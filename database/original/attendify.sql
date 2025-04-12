@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2025 at 06:34 PM
+-- Generation Time: Apr 12, 2025 at 01:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -76,8 +76,7 @@ CREATE TABLE `tblattendance` (
   `attendanceID` int(50) NOT NULL,
   `professorRegistrationNumber` varchar(100) NOT NULL,
   `course` varchar(100) NOT NULL,
-  `attendance_timein` varchar(100) DEFAULT NULL,
-  `attendance_timeout` varchar(100) DEFAULT NULL,
+  `attendanceStatus` varchar(100) NOT NULL,
   `dateMarked` date NOT NULL,
   `unit` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -86,9 +85,9 @@ CREATE TABLE `tblattendance` (
 -- Dumping data for table `tblattendance`
 --
 
-INSERT INTO `tblattendance` (`attendanceID`, `professorRegistrationNumber`, `course`, `attendance_timein`, `attendance_timeout`, `dateMarked`, `unit`) VALUES
-(41, 'TUPM-21-0397', 'BSITY1', '12:22:16 AM\n←', '12:22:16 AM ←', '2025-04-12', 'CS50'),
-(42, 'TUPM-21-0395', 'BSITY1', 'No Time In', NULL, '2025-04-12', 'CS50');
+INSERT INTO `tblattendance` (`attendanceID`, `professorRegistrationNumber`, `course`, `attendanceStatus`, `dateMarked`, `unit`) VALUES
+(24, 'TUPM-21-0395', 'BSITY1', '06:51:18 PM\n←', '2025-04-12', 'CS50'),
+(25, 'TUPM-21-0395', 'BSITY1', '06:51:51 PM\n←', '2025-04-12', 'CS50');
 
 -- --------------------------------------------------------
 
@@ -167,8 +166,7 @@ CREATE TABLE `tblprofessor` (
 
 INSERT INTO `tblprofessor` (`Id`, `firstName`, `lastName`, `registrationNumber`, `email`, `yearlevel`, `courseCode`, `professorImage`, `dateRegistered`) VALUES
 (134, 'John Michael', 'Llosa', 'TUPM-21-0395', 'llosajohnmichael25@gmail.com', 'Y1', 'BSITY1', '[\"TUPM-21-0395_image1.png\",\"TUPM-21-0395_image2.png\",\"TUPM-21-0395_image3.png\",\"TUPM-21-0395_image4.png\",\"TUPM-21-0395_image5.png\"]', '2025-01-13'),
-(135, 'Lorenzo', 'Sypio', 'TUPM-21-0396', 'lorenzosypio@gmail.com', 'Y4', 'BSCS(Y4)', '[\"TUPM-21-0396_image1.png\",\"TUPM-21-0396_image2.png\",\"TUPM-21-0396_image3.png\",\"TUPM-21-0396_image4.png\",\"TUPM-21-0396_image5.png\"]', '2025-01-14'),
-(136, 'joshua', 'padilla', 'TUPM-21-0397', 'andersonandy046@gmail.com', 'Y4', 'BSITY1', '[\"TUPM-21-0397_image1.png\",\"TUPM-21-0397_image2.png\",\"TUPM-21-0397_image3.png\",\"TUPM-21-0397_image4.png\",\"TUPM-21-0397_image5.png\"]', '2025-04-12');
+(135, 'Lorenzo', 'Sypio', 'TUPM-21-0396', 'lorenzosypio@gmail.com', 'Y4', 'BSCS(Y4)', '[\"TUPM-21-0396_image1.png\",\"TUPM-21-0396_image2.png\",\"TUPM-21-0396_image3.png\",\"TUPM-21-0396_image4.png\",\"TUPM-21-0396_image5.png\"]', '2025-01-14');
 
 -- --------------------------------------------------------
 
@@ -321,7 +319,7 @@ ALTER TABLE `tbladmin`
 -- AUTO_INCREMENT for table `tblattendance`
 --
 ALTER TABLE `tblattendance`
-  MODIFY `attendanceID` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `attendanceID` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `tblcourse`
@@ -339,7 +337,7 @@ ALTER TABLE `tbldepthead`
 -- AUTO_INCREMENT for table `tblprofessor`
 --
 ALTER TABLE `tblprofessor`
-  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `tblroom`
