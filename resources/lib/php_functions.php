@@ -133,6 +133,36 @@ function fetchprofessorRecordsFromDatabase($courseCode, $unitCode)
     return $professorRows;
 }
 
+
+
+function fetchAllProfessorRecordsFromDatabase()
+{
+    $professorRows = [];
+
+    $query = "SELECT tblattendance.*, tblprofessor.*, tblcourse.name as coursename, tblunit.name as unitname
+              FROM tblattendance 
+              LEFT JOIN tblprofessor ON tblprofessor.registrationNumber = tblattendance.professorRegistrationNumber
+              LEFT JOIN tblcourse ON tblcourse.courseCode = tblprofessor.courseCode
+              LEFT JOIN tblunit ON tblunit.Id = tblattendance.unit
+              Group By tblattendance.professorRegistrationNumber
+              ";
+
+    // Assuming fetch() is your custom function that returns an array of associative arrays
+    $result = fetch($query);
+
+    if (is_array($result)) {
+        foreach ($result as $row) {
+            $professorRows[] = $row;
+        }
+    }
+
+    return $professorRows;
+}
+
+
+
+
+
 function js_asset($links = [])
 {
     if ($links) {

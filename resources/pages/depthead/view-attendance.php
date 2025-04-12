@@ -3,27 +3,11 @@
 $courseCode = isset($_GET['course']) ? $_GET['course'] : '';
 $unitCode = isset($_GET['unit']) ? $_GET['unit'] : '';
 
-$professorRows = fetchprofessorRecordsFromDatabase($courseCode, $unitCode);
+$professorRows = fetchAllprofessorRecordsFromDatabase();
 
-$coursename = "";
-if (!empty($courseCode)) {
-    $coursename_query = "SELECT name FROM tblcourse WHERE courseCode = '$courseCode'";
-    $result = fetch($coursename_query);
-    foreach ($result as $row) {
-
-        $coursename = $row['name'];
-    }
-}
-$unitname = "";
-if (!empty($unitCode)) {
-    $unitname_query = "SELECT name FROM tblunit WHERE unitCode = '$unitCode'";
-    $result = fetch($unitname_query);
-    foreach ($result as $row) {
-
-        $unitname = $row['name'];
-    }
-}
-
+// echo "<pre>";
+// print_r($professorRows);
+// echo "</pre>";
 
 ?>
 
@@ -82,73 +66,39 @@ if (!empty($unitCode)) {
                         <thead>
                             <tr>
                                 <th>Registration No</th>
-                                <?php
-                                // Fetch distinct dates for the selected course and unit
-                                $distinctDatesQuery = "SELECT DISTINCT dateMarked FROM tblattendance WHERE course = :courseCode AND unit = :unitCode";
-                                $stmtDates = $pdo->prepare($distinctDatesQuery);
-                                $stmtDates->execute([
-                                    ':courseCode' => $courseCode,
-                                    ':unitCode' => $unitCode,
-                                ]);
-                                $distinctDatesResult = $stmtDates->fetchAll(PDO::FETCH_ASSOC);
-
-                                // Display each distinct date as a column header
-                                if ($distinctDatesResult) {
-                                    foreach ($distinctDatesResult as $dateRow) {
-                                        echo "<th>" . $dateRow['dateMarked'] . "</th>";
-                                    }
-                                }
-                                ?>
+                                <th>Name</th>
+                                <th>Course</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            // Fetch all unique professor for the given course and unit
-                            $professorQuery = "SELECT DISTINCT professorRegistrationNumber FROM tblattendance WHERE course = :courseCode AND unit = :unitCode";
-                            $stmtprofessor = $pdo->prepare($professorQuery);
-                            $stmtprofessor->execute([
-                                ':courseCode' => $courseCode,
-                                ':unitCode' => $unitCode,
-                            ]);
-                            $professorRows = $stmtprofessor->fetchAll(PDO::FETCH_ASSOC);
+                        <?php 
+                    if (!empty($professorRows)): 
+                        $count = 1;
+                        foreach ($professorRows as $prof): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($prof['registrationNumber']) ?></td>
+                                <td><?= htmlspecialchars(ucfirst($prof['firstName'])." ".$prof['lastName']) ?></td> 
+                              
+                                <td><?= htmlspecialchars($prof['coursename']) ?></td>
+                                 <td><?= htmlspecialchars($prof['unitname']) ?></td>
+                             
+                            </tr>
+                        <?php 
+                        $count++; 
+                        endforeach;
+                    else: ?>
+                        <tr>
+                            <td colspan="5" class="p-2">No record found.</td>
+                        </tr>
+                    <?php endif; ?>
 
-                            // Display each professor's attendance row
-                            foreach ($professorRows as $row) {
-                                echo "<tr>";
-                                echo "<td>" . $row['professorRegistrationNumber'] . "</td>";
 
-                                // Loop through each date and fetch the attendance status for the professor
-                                foreach ($distinctDatesResult as $dateRow) {
-                                    $date = $dateRow['dateMarked'];
-
-                                    // Fetch attendance for the current professor and date
-                                    $attendanceQuery = "SELECT attendance_timein FROM tblattendance 
-                                    WHERE professorRegistrationNumber = :professorRegistrationNumber 
-                                    AND dateMarked = :date 
-                                    AND course = :courseCode 
-                                    AND unit = :unitCode";
-                                    $stmtAttendance = $pdo->prepare($attendanceQuery);
-                                    $stmtAttendance->execute([
-                                        ':professorRegistrationNumber' => $row['professorRegistrationNumber'],
-                                        ':date' => $date,
-                                        ':courseCode' => $courseCode,
-                                        ':unitCode' => $unitCode,
-                                    ]);
-                                    $attendanceResult = $stmtAttendance->fetch(PDO::FETCH_ASSOC);
-
-                                    // Display attendance status or default to "Absent"
-                                    if ($attendanceResult) {
-                                        echo "<td>" . $attendanceResult['attendance_timein'] . "</td>";
-                                    } else {
-                                        echo "<td>Absent</td>";
-                                    }
-                                }
-
-                                echo "</tr>";
-                            }
-                            ?>
+                               
                         </tbody>
                     </table>
+
+
 
                 </div>
             </div>
