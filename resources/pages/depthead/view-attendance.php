@@ -33,41 +33,19 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
     <section class="main">
         <?php include 'includes/sidebar.php'; ?>
         <div class="main--content">
-            <form class="depthead-options" id="selectForm">
-                <select required name="course" id="courseSelect" onChange="updateTable()">
-                    <option value="" selected>Select Course</option>
-                    <?php
-                    $courseNames = getCourseNames();
-                    foreach ($courseNames as $course) {
-                        echo '<option value="' . $course["courseCode"] . '">' . $course["name"] . '</option>';
-                    }
-                    ?>
-                </select>
-
-                <select required name="unit" id="unitSelect" onChange="updateTable()">
-                    <option value="" selected>Select Subject</option>
-                    <?php
-                    $unitNames = getUnitNames();
-                    foreach ($unitNames as $unit) {
-                        echo '<option value="' . $unit["unitCode"] . '">' . $unit["name"] . '</option>';
-                    }
-                    ?>
-                </select>
-            </form>
-
-            <button class="add" onclick="exportTableToExcel('attendaceTable', '<?php echo $unitCode ?>_on_<?php echo date('Y-m-d'); ?>','<?php echo $coursename ?>', '<?php echo $unitname ?>')">Export Attendance As Excel</button>
-
+            
             <div class="table-container">
                 <div class="title">
-                    <h2 class="section--title">ATTENDANCE PREVIEW</h2>
+                    <h2 class="section--title">DAILY TIME REPORT</h2>
                 </div>
                 <div class="table attendance-table" id="attendaceTable">
                     <table>
                         <thead>
                             <tr>
-                                <th>Registration No</th>
-                                <th>Name</th>
-                                <th>Course</th>
+                                <th>NAME</th>
+                                <th>SUBJECT</th>
+                                <th>TIME IN</th>
+                                <th>TIME OUT</th>
                               
                             </tr>
                         </thead>
@@ -77,13 +55,12 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
                         $count = 1;
                         foreach ($professorRows as $prof): ?>
                             <tr>
-                                <td><?= htmlspecialchars($prof['registrationNumber']) ?></td>
                                 <td><?= htmlspecialchars(ucfirst($prof['firstName'])." ".$prof['lastName']) ?></td> 
-                              
-                                <td><?= htmlspecialchars($prof['coursename']) ?></td>
-                                 <td><?= htmlspecialchars($prof['unitname']) ?></td>
-                             
+                                <td><?= htmlspecialchars($prof['unitname']) ?></td>
+                                <td><?= $prof['attendance_timein'] ? htmlspecialchars($prof['attendance_timein']) : 'No Time In' ?></td>
+                                <td><?= $prof['attendance_timeout'] ? htmlspecialchars($prof['attendance_timeout']) : 'No Time Out' ?></td>
                             </tr>
+
                         <?php 
                         $count++; 
                         endforeach;

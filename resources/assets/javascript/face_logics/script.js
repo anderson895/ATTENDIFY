@@ -71,12 +71,12 @@ function markAttendance(detectedFaces) {
 
       if (!timeInAttr || timeInAttr === "") {
         console.log(timeInCell.textContent.trim());
-        console.log('For timeIn');
+        // console.log('For timeIn');
         timeInCell.innerHTML = createAttendanceMarkup(timestamp, true);
      
         statusCell.textContent = "";
       } else {
-        console.log('For timeOut');
+        // console.log('For timeOut');
         timeOutCell.innerHTML = createAttendanceMarkup(timestamp, true);
         statusCell.textContent = "";
       }
@@ -261,9 +261,21 @@ function sendAttendanceDataToServer() {
       const professorID = row.cells[0].innerText.trim();
       const course = row.cells[2].innerText.trim();
       const unit = row.cells[3].innerText.trim();
-      const attendance_time = row.cells[5].innerText.trim();
+      
 
-      console.log(attendance_time)
+      const timeInCell = row.cells[5];    // 6th column
+      const timeInAttr = timeInCell.getAttribute('data-timein');
+  
+
+      if (!timeInAttr || timeInAttr === "") {
+        console.log('For timeIn');
+        var attendance_time = row.cells[5].innerText.trim();
+        
+      } else {
+        console.log('For timeOut');
+        var attendance_time = row.cells[6].innerText.trim();
+        
+      }
 
       attendanceData.push({ professorID, course, unit, attendance_time });
     });

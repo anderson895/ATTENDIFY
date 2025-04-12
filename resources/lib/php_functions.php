@@ -133,21 +133,20 @@ function fetchprofessorRecordsFromDatabase($courseCode, $unitCode)
     return $professorRows;
 }
 
-
-
+// DAILY ATTENDANCE RECORD
 function fetchAllProfessorRecordsFromDatabase()
 {
     $professorRows = [];
 
+    // Adjust 'date' to your actual date column in tblattendance if it's named differently
     $query = "SELECT tblattendance.*, tblprofessor.*, tblcourse.name as coursename, tblunit.name as unitname
               FROM tblattendance 
               LEFT JOIN tblprofessor ON tblprofessor.registrationNumber = tblattendance.professorRegistrationNumber
               LEFT JOIN tblcourse ON tblcourse.courseCode = tblprofessor.courseCode
-              LEFT JOIN tblunit ON tblunit.Id = tblattendance.unit
-              Group By tblattendance.professorRegistrationNumber
-              ";
+              LEFT JOIN tblunit ON tblunit.unitCode = tblattendance.unit
+              WHERE DATE(tblattendance.dateMarked) = CURDATE()
+              GROUP BY tblattendance.professorRegistrationNumber";
 
-    // Assuming fetch() is your custom function that returns an array of associative arrays
     $result = fetch($query);
 
     if (is_array($result)) {
@@ -158,6 +157,7 @@ function fetchAllProfessorRecordsFromDatabase()
 
     return $professorRows;
 }
+
 
 
 
