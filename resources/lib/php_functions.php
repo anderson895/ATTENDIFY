@@ -133,20 +133,35 @@ function fetchprofessorRecordsFromDatabase($courseCode, $unitCode)
     return $professorRows;
 }
 
-// DAILY ATTENDANCE RECORD
+
 function fetchAllProfessorRecordsFromDatabase()
 {
     $professorRows = [];
 
-    // Adjust 'date' to your actual date column in tblattendance if it's named differently
-    $query = "SELECT tblattendance.*, tblprofessor.*, tblcourse.name as coursename, tblunit.name as unitname
-              FROM tblattendance 
+    $query = "SELECT DISTINCT tblattendance.attendanceID, 
+                             tblattendance.professorRegistrationNumber, 
+                             tblattendance.course, 
+                             tblattendance.attendance_timein, 
+                             tblattendance.attendance_timeout, 
+                             tblattendance.dateMarked, 
+                             tblattendance.unit, 
+                             tblprofessor.firstName, 
+                             tblprofessor.lastName, 
+                             tblprofessor.registrationNumber, 
+                             tblprofessor.email, 
+                             tblprofessor.yearlevel, 
+                             tblprofessor.courseCode, 
+                             tblprofessor.professorImage, 
+                             tblprofessor.dateRegistered, 
+                             tblcourse.name AS coursename, 
+                             tblunit.name AS unitname
+              FROM tblattendance
               LEFT JOIN tblprofessor ON tblprofessor.registrationNumber = tblattendance.professorRegistrationNumber
               LEFT JOIN tblcourse ON tblcourse.courseCode = tblprofessor.courseCode
               LEFT JOIN tblunit ON tblunit.unitCode = tblattendance.unit
-              WHERE DATE(tblattendance.dateMarked) = CURDATE()
-              GROUP BY tblattendance.professorRegistrationNumber";
+              Group by tblattendance.attendanceID";
 
+    // Fetch the results from the database
     $result = fetch($query);
 
     if (is_array($result)) {
@@ -157,6 +172,7 @@ function fetchAllProfessorRecordsFromDatabase()
 
     return $professorRows;
 }
+
 
 
 
