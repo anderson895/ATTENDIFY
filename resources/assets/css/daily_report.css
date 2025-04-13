@@ -1,0 +1,111 @@
+.report-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header-logos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.report-title {
+    flex: 1;
+    text-align: center;
+}
+
+.report-title h2 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.report-title p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.report-title h3 {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.report-info {
+    text-align: left;
+    padding: 10px 0 10px 10px;
+}
+
+.attendance-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.attendance-table th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+}
+
+
+img {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+
+
+.logo {
+    width: 100px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* print area */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #printed-area, #printed-area * {
+        visibility: visible;
+    }
+    #printed-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
