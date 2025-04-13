@@ -20,60 +20,106 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
 <body>
     <?php include 'includes/topbar.php'; ?>
     <section class="main">
-        <?php include 'includes/sidebar.php'; ?>
-        <div class="main--content">
+    <?php include 'includes/sidebar.php'; ?>
+    <div class="main--content">
 
-            <button id="printButton" style="margin: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Print Report
-            </button>
+        <button id="printButton" style="margin: 10px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Print Report
+        </button>
+        <h3>Daily Time Report</h3>
 
-            <div class="table-container" id="printed-area">
-               
+        <div class="filter-container" style="margin: 10px 0;">
+            <label for="filterName">Filter by Name:</label>
+            <select id="filterName" style="margin-right: 10px;">
+                <option value="">Select Name</option>
+                <!-- PHP loop to populate names dynamically -->
+                <?php foreach ($professorRows as $prof): ?>
+                    <option value="<?= htmlspecialchars(ucfirst($prof['firstName']) . " " . $prof['lastName']) ?>">
+                        <?= htmlspecialchars(ucfirst($prof['firstName']) . " " . $prof['lastName']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            
+            <label for="filterSubject">Filter by Subject:</label>
+            <select id="filterSubject">
+                <option value="">Select Subject</option>
+                <!-- PHP loop to populate subjects dynamically -->
+                <?php foreach ($professorRows as $prof): ?>
+                    <option value="<?= htmlspecialchars($prof['unitname']) ?>">
+                        <?= htmlspecialchars($prof['unitname']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-                <div class="report-info">
-                    <p><strong>Date:</strong> <?= date('F d, Y') ?></p>
-                  
-                </div>
+        <div class="table-container" id="printed-area">
+            <div class="report-info">
+                <p><strong>Date:</strong> <?= date('F d, Y') ?></p>
+            </div>
 
-                <div id="attendanceTable">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>NAME</th>
-                                <th>SUBJECT</th>
-                                <th>TIME IN</th>
-                                <th>TIME OUT</th>
+            <div id="attendanceTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NAME</th>
+                            <th>SUBJECT</th>
+                            <th>TIME IN</th>
+                            <th>TIME OUT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($professorRows)):
+                            foreach ($professorRows as $prof): ?>
+                            <tr class="attendance-row">
+                                <td class="name"><?= htmlspecialchars(ucfirst($prof['firstName']) . " " . $prof['lastName']) ?></td>
+                                <td class="subject"><?= htmlspecialchars($prof['unitname']) ?></td>
+                                <td><?= $prof['attendance_timein'] ? htmlspecialchars($prof['attendance_timein']) : '' ?></td>
+                                <td><?= $prof['attendance_timeout'] ? htmlspecialchars($prof['attendance_timeout']) : '' ?></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($professorRows)):
-                                foreach ($professorRows as $prof): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars(ucfirst($prof['firstName']) . " " . $prof['lastName']) ?></td>
-                                    <td><?= htmlspecialchars($prof['unitname']) ?></td>
-                                    <td><?= $prof['attendance_timein'] ? htmlspecialchars($prof['attendance_timein']) : '' ?></td>
-                                    <td><?= $prof['attendance_timeout'] ? htmlspecialchars($prof['attendance_timeout']) : '' ?></td>
-                                </tr>
-                            <?php endforeach;
-                            endif;
+                        <?php endforeach;
+                        endif;
 
-                            // Fill remaining rows to make it 10
-                            $fillCount = 10 - count($professorRows ?? []);
-                            for ($i = 0; $i < $fillCount; $i++): ?>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            <?php endfor; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div> <!-- End of printed-area -->
+                        // Fill remaining rows to make it 10
+                        $fillCount = 10 - count($professorRows ?? []);
+                        for ($i = 0; $i < $fillCount; $i++): ?>
+                            <tr class="attendance-row">
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        <?php endfor; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- End of printed-area -->
 
-        </div> <!-- End of main--content -->
-    </section>
+    </div> <!-- End of main--content -->
+</section>
+
+<!-- jQuery and script to filter the table -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#filterName, #filterSubject').on('change', function () {
+            var nameFilter = $('#filterName').val().toLowerCase();
+            var subjectFilter = $('#filterSubject').val().toLowerCase();
+
+            $('.attendance-row').each(function () {
+                var name = $(this).find('.name').text().toLowerCase();
+                var subject = $(this).find('.subject').text().toLowerCase();
+
+                if ((name.includes(nameFilter) || nameFilter === '') && 
+                    (subject.includes(subjectFilter) || subjectFilter === '')) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
+
 
     <?php js_asset(['min/js/filesaver', 'min/js/xlsx', 'active_link']) ?>
 

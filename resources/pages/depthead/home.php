@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
 
             </form>
+            <input hidden type="text" id="targetAttendance_professor">
             <div class="attendance-button">
                 <button id="startButton" class="add">Launch Facial Recognition</button>
                 <button id="endButton" class="add" style="display:none">End Attendance Process</button>
@@ -114,9 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         </div>
     </section>
-    <script>
-
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php js_asset(["active_link", 'face_logics/script']) ?>
 

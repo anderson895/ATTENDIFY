@@ -4,41 +4,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $attendanceData = json_decode(file_get_contents("php://input"), true);
     $response = [];
 
-    if ($attendanceData) {
-        try {
-            foreach ($attendanceData as $data) {
+    if ($attendanceData && isset($attendanceData[0])) {
+        $data = $attendanceData[0]; // Get only the first item
 
-               if($data['attendance_time']!="No Time In"){
+        if ($data['attendance_time'] != "No Time In") {
+            try {
+                date_default_timezone_set('Asia/Manila');
                 $professorID = $data['professorID'];
-                $attendance_time = $data['attendance_time'] ?? null;
+                $attendance_time = date("h:i:s A");
+
                 $course = $data['course'];
                 $unit = $data['unit'];
                 $date = date("Y-m-d");
 
-                // Check if professor has an entry today with no timeout (get the latest one)
-                $checkSql = "SELECT attendanceID FROM tblattendance 
+                // Check if there is an existing record without timeout
+                $checkSql = "SELECT attendanceID,unit FROM tblattendance 
                              WHERE professorRegistrationNumber = :professorID 
                              AND dateMarked = :date
+                             AND unit = :unit
                              AND attendance_timeout IS NULL
                              ORDER BY attendanceID DESC
                              LIMIT 1";
                 $checkStmt = $pdo->prepare($checkSql);
                 $checkStmt->execute([
                     ':professorID' => $professorID,
-                    ':date' => $date
+                    ':date' => $date,
+                    ':unit' => $unit
                 ]);
 
                 $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($existing) {
-                    // Update only the latest record without timeout
+                    // Update timeout
                     $updateSql = "UPDATE tblattendance 
                                   SET attendance_timeout = :attendance_timeout 
-                                  WHERE attendanceID = :attendanceID";
+                                  WHERE attendanceID = :attendanceID AND unit:unit";
                     $updateStmt = $pdo->prepare($updateSql);
                     $updateStmt->execute([
                         ':attendance_timeout' => $attendance_time,
-                        ':attendanceID' => $existing['attendanceID']
+                        ':attendanceID' => $existing['attendanceID'],
+                        ':unit' => $existing['unit'],
                     ]);
                 } else {
                     // Insert new record
@@ -55,20 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
 
-               }
-
-               
+                $response['status'] = 'success';
+                $response['message'] = "Attendance processed successfully.";
+            } catch (PDOException $e) {
+                $response['status'] = 'error';
+                $response['message'] = "Database error: " . $e->getMessage();
             }
-
-            $response['status'] = 'success';
-            $response['message'] = "Attendance processed successfully.";
-        } catch (PDOException $e) {
+        } else {
             $response['status'] = 'error';
-            $response['message'] = "Database error: " . $e->getMessage();
+            $response['message'] = "Invalid attendance time.";
         }
     } else {
         $response['status'] = 'error';
-        $response['message'] = "No attendance data received.";
+        $response['message'] = "No valid attendance data received.";
     }
 
     echo json_encode($response);

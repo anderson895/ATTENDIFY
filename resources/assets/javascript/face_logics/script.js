@@ -53,6 +53,9 @@ function markAttendance(detectedFaces) {
   document.querySelectorAll("#professorTableContainer tr").forEach((row) => {
     const registrationNumber = row.cells[0].innerText.trim();
 
+
+    $("#targetAttendance_professor").val(detectedFaces);
+
     if (detectedFaces.includes(registrationNumber)) {
       const now = new Date();
       const timestamp = now.toLocaleString('en-US', {
@@ -67,7 +70,7 @@ function markAttendance(detectedFaces) {
       const statusCell = row.cells[7];    // 8th column
 
       const timeInAttr = timeInCell.getAttribute('data-timein');
-      console.log(timeInAttr);
+      // console.log(timeInAttr);
 
       if (!timeInAttr || timeInAttr === "") {
         console.log(timeInCell.textContent.trim());
@@ -88,7 +91,7 @@ function markAttendance(detectedFaces) {
 function createAttendanceMarkup(timestamp, isTimeIn) {
   const formattedTimestamp = timestamp.replace(/([AP]M)/, '<strong>$1</strong>');
   
-  console.log(isTimeIn);
+  // console.log(isTimeIn);
 
   return `
     <div class="attendance-mark ${isTimeIn ? 'time-in' : 'time-out'}">
@@ -258,23 +261,30 @@ function sendAttendanceDataToServer() {
     .querySelectorAll("#professorTableContainer tr")
     .forEach((row, index) => {
       if (index === 0) return;
-      const professorID = row.cells[0].innerText.trim();
+
+      
+      const professorID = $("#targetAttendance_professor").val();
+
+      console.log(professorID);
       const course = row.cells[2].innerText.trim();
       const unit = row.cells[3].innerText.trim();
       
 
-      const timeInCell = row.cells[5];    // 6th column
+      const timeInCell = row.cells[5];    
+      const statusCell = row.cells[7];    
       const timeInAttr = timeInCell.getAttribute('data-timein');
   
 
       if (!timeInAttr || timeInAttr === "") {
         console.log('For timeIn');
         var attendance_time = row.cells[5].innerText.trim();
+
+        statusCell.textContent = "";
         
       } else {
         console.log('For timeOut');
         var attendance_time = row.cells[6].innerText.trim();
-        
+        statusCell.textContent = "";
       }
 
       attendanceData.push({ professorID, course, unit, attendance_time });
