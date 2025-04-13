@@ -159,7 +159,9 @@ function fetchAllProfessorRecordsFromDatabase()
               LEFT JOIN tblprofessor ON tblprofessor.registrationNumber = tblattendance.professorRegistrationNumber
               LEFT JOIN tblcourse ON tblcourse.courseCode = tblprofessor.courseCode
               LEFT JOIN tblunit ON tblunit.unitCode = tblattendance.unit
-              Group by tblattendance.attendanceID";
+              Group by tblattendance.attendanceID
+               ORDER BY `dateMarked` DESC
+              ";
 
     // Fetch the results from the database
     $result = fetch($query);

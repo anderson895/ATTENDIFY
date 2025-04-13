@@ -93,6 +93,7 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
                             <th>SUBJECT</th>
                             <th>TIME IN</th>
                             <th>TIME OUT</th>
+                            <th>DATE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,7 +103,11 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
                                 <td class="name"><?= htmlspecialchars(ucfirst($prof['firstName']) . " " . $prof['lastName']) ?></td>
                                 <td class="subject"><?= htmlspecialchars($prof['unitname']) ?></td>
                                 <td><?= $prof['attendance_timein'] ? htmlspecialchars($prof['attendance_timein']) : '' ?></td>
-                                <td><?= $prof['attendance_timeout'] ? htmlspecialchars($prof['attendance_timeout']) : '' ?></td>
+                                <td style="color: <?= $prof['attendance_timeout'] ? 'green' : 'red' ?>;">
+                                    <?= $prof['attendance_timeout'] ? htmlspecialchars($prof['attendance_timeout']) : 'No Time Out' ?>
+                                </td>
+
+                                <td><?= $prof['dateMarked'] ? htmlspecialchars($prof['dateMarked']) : '' ?></td>
                             </tr>
                         <?php endforeach;
                         endif;

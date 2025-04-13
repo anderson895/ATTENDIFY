@@ -3,7 +3,9 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $attendanceData = json_decode(file_get_contents("php://input"), true);
     $response = [];
-
+    // echo "<pre>";
+    // print_r($attendanceData);
+    // echo "</pre>";
     if ($attendanceData && isset($attendanceData[0])) {
         $data = $attendanceData[0]; // Get only the first item
 
@@ -35,16 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($existing) {
-                    // Update timeout
+
+                  
+
                     $updateSql = "UPDATE tblattendance 
-                                  SET attendance_timeout = :attendance_timeout 
-                                  WHERE attendanceID = :attendanceID AND unit:unit";
-                    $updateStmt = $pdo->prepare($updateSql);
-                    $updateStmt->execute([
-                        ':attendance_timeout' => $attendance_time,
-                        ':attendanceID' => $existing['attendanceID'],
-                        ':unit' => $existing['unit'],
-                    ]);
+                    SET attendance_timeout = :attendance_timeout 
+                    WHERE attendanceID = :attendanceID AND unit = :unit";  // Fixed the issue here
+                        $updateStmt = $pdo->prepare($updateSql);
+                        $updateStmt->execute([
+                            ':attendance_timeout' => $attendance_time,
+                            ':attendanceID' => $existing['attendanceID'],
+                            ':unit' => $existing['unit'],
+                        ]);
+
                 } else {
                     // Insert new record
                     $insertSql = "INSERT INTO tblattendance 
