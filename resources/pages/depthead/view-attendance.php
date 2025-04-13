@@ -32,7 +32,7 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
 
                 <div class="report-info">
                     <p><strong>Date:</strong> <?= date('F d, Y') ?></p>
-                    <p><strong>TUP ID:</strong> ______________________</p>
+                  
                 </div>
 
                 <div id="attendanceTable">
@@ -88,6 +88,8 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
 
             printWindow.document.write('<html><head><title>Print Report</title>');
                         printWindow.document.write(`
+              
+
                 <div class="report-header">
                     <div class="header-logos">
                         <!-- Left Logo -->
@@ -108,6 +110,8 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
                         </div>
                     </div>
                 </div>
+
+                  <p><strong>TUP ID:</strong> ______________________</p>
             `);
 
 
