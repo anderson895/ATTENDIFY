@@ -9,7 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($attendanceData && isset($attendanceData[0])) {
         $data = $attendanceData[0]; // Get only the first item
 
-        if ($data['attendance_time'] != "No Time In") {
+        // echo $data['attendance_time'];
+
+        // if ($data['attendance_time'] != "No Time In") {
             try {
                 date_default_timezone_set('Asia/Manila');
                 $professorID = $data['professorID'];
@@ -71,10 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response['status'] = 'error';
                 $response['message'] = "Database error: " . $e->getMessage();
             }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = "Invalid attendance time.";
-        }
+        // } else {
+        //     $response['status'] = 'error';
+        //     $response['message'] = "Invalid attendance time.";
+        // }
     } else {
         $response['status'] = 'error';
         $response['message'] = "No valid attendance data received.";

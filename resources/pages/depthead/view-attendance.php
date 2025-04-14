@@ -119,6 +119,7 @@ $professorRows = fetchAllprofessorRecordsFromDatabase();
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                             </tr>
                         <?php endfor; ?>
                     </tbody>
@@ -167,7 +168,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-        url: 'fetch_filtered_data', // Update with the correct endpoint
+        url: 'fetch_filtered_data', 
         method: 'POST',
         data: {
             startDate: startDate,
@@ -180,39 +181,7 @@ $(document).ready(function () {
             console.log(response);
             $('#exportModal').fadeOut();
 
-            // Display the filtered data in your exported table
-            let html = `
-                <div style="margin-bottom: 10px; text-align: center;">
-                    <strong>Report From:</strong> ${new Date(startDate).toLocaleDateString()} <strong>To:</strong> ${new Date(endDate).toLocaleDateString()}
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Subject</th>
-                            <th>Time In</th>
-                            <th>Time Out</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            if (response.length > 0) {
-                response.forEach(function (row) {
-                    html += `<tr>
-                                <td>${row.firstName} ${row.lastName}</td>
-                                <td>${row.unitName}</td>
-                                <td>${row.attendance_timein}</td>
-                                <td>${row.attendance_timeout}</td>
-                            </tr>`;
-                });
-            } else {
-                html += '<tr><td colspan="4">No records found.</td></tr>';
-            }
-
-            html += '</tbody></table>';
-
-            $('#exportedTable').html(html).show();
+            
             printArea();  // Calls the print function with filtered data
         },
         error: function (xhr, status, error) {
@@ -274,7 +243,7 @@ function printArea() {
     printWindow.onload = function () {
         printWindow.focus();
         printWindow.print();
-        printWindow.close();
+        // printWindow.close();
     };
 }
 </script>

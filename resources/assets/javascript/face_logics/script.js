@@ -10,7 +10,9 @@ function updateTable() {
   var selectedroom = document.getElementById("roomSelect").value;
 
 
-  console.log(selectedroom);
+  
+
+ 
 
 
   var xhr = new XMLHttpRequest();
@@ -267,6 +269,7 @@ function sendAttendanceDataToServer() {
 
       console.log(professorID);
       const course = row.cells[2].innerText.trim();
+
       const unit = row.cells[3].innerText.trim();
       
 

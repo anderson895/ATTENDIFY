@@ -24,13 +24,11 @@ if (isset($_POST['courseID']) && isset($_POST['unitID']) && isset($_POST['roomID
     $today = date("Y-m-d");
 
     $sql = "SELECT p.registrationNumber, p.firstName, p.lastName,
-            a.attendance_timein, a.attendance_timeout,u.name as unitName 
+            a.attendance_timein, a.attendance_timeout
         FROM tblprofessor p
         LEFT JOIN tblattendance a 
             ON p.registrationNumber = a.professorRegistrationNumber 
             AND DATE(a.dateMarked) = :today
-        LEFT JOIN tblunit u 
-            ON u.unitCode = a.unit 
         WHERE p.courseCode = :courseID";
 
 
@@ -54,7 +52,7 @@ if (isset($_POST['courseID']) && isset($_POST['unitID']) && isset($_POST['roomID
             echo "<td>" . htmlspecialchars($row["registrationNumber"]) . "</td>";
             echo "<td>" . htmlspecialchars($row["firstName"] . " " . $row["lastName"]) . "</td>";
             echo "<td>" . htmlspecialchars($courseID) . "</td>";
-            echo "<td>" . htmlspecialchars($row["unitName"]) . "</td>";
+            echo "<td>" . $unitID . "</td>";
             echo "<td>" . htmlspecialchars($roomID) . "</td>";
             echo "<td data-timein='$timeIn'>" . htmlspecialchars($timeIn ?? 'No Time In') . "</td>";
             echo "<td data-timeOut='$timeOut'>" . htmlspecialchars($timeOut ?? 'No Time Out') . "</td>";
